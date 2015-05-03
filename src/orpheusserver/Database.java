@@ -39,18 +39,18 @@ public class Database {
             Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);
         }*/
         try {
-            con = DriverManager.getConnection("jdbc:mysql://localhost:8080/orpheusdatabase",username,pass);
+            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/orpheusdatabase",username,pass);
             stmt= con.createStatement();
-        } catch (SQLException e){
-            e.printStackTrace();
+        } catch (SQLException ex){
+            Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
     public ResultSet getData(String query){
             try {
                 rs = stmt.executeQuery(query);
-            } catch (Exception e){
-                e.printStackTrace();
+            } catch (Exception ex){
+                Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);
             }
             return rs;
     }

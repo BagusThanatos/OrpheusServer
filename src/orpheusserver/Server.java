@@ -7,6 +7,7 @@ package orpheusserver;
 
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -23,7 +24,8 @@ public class Server extends Thread{
             s= new ServerSocket(10000);
             System.out.println(s.getInetAddress());
             while (true){
-                ServerThread st = new ServerThread(s.accept());
+                Socket sock= s.accept();
+                ServerThread st = new ServerThread(sock);
                 st.start();
             }
         } catch (IOException ex) {

@@ -31,15 +31,16 @@ public class ServerThread extends Thread{
     
     private void login(StringTokenizer st){
         try {
-            String username=st.nextToken(); System.out.println("here");
-            String password = st.nextToken();
+            String username=st.nextToken();
+            String password = st.nextToken();System.out.println(username+password);
             ResultSet rs = Database.getInstance().getData("select * from user where email_user='"+username+
                     "' and pass_user='"+password+"'");
+            System.out.println("here");
             PrintWriter p = new PrintWriter(s.getOutputStream(),true);
             if (rs.isBeforeFirst()) { 
-                p.write(username);
+                p.println(username);
             }
-            else p.write("WRONG");
+            else p.println("WRONG");
         } catch (SQLException | IOException ex) {
             Logger.getLogger(ServerThread.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -53,7 +54,7 @@ public class ServerThread extends Thread{
                     s+=rs.getString("id_album")+" "+rs.getString("nama_album")+" "+rs.getString("tgl_rilis")+" "+rs.getString("harga")+" ";
                 }
                 PrintWriter p = new PrintWriter(this.s.getOutputStream(),true);
-                p.write(s);
+                p.println(s);
             }
         } catch (SQLException | IOException ex) {
             Logger.getLogger(ServerThread.class.getName()).log(Level.SEVERE, null, ex);
@@ -90,17 +91,16 @@ public class ServerThread extends Thread{
             String string;
             InputStream is = s.getInputStream();
             BufferedReader in = new BufferedReader(new InputStreamReader(is));
-            string=in.readLine();
-            while(string!=null){
-                StringTokenizer st = new StringTokenizer(string, " ");
+            while((string=in.readLine())!=null){
+                StringTokenizer st = new StringTokenizer(string, " ");System.out.println(in.toString());
                 String temp=st.nextToken();
+                System.out.println(temp);
                 if (temp.equals("LOGIN")) login(st);
                 else if (temp.equals("LOGOUT")) break;
                 else if (temp.equals("GETALBUMLIST")) getAlbumList(st);
                 else if (temp.equals("GETALBUMDATA")) getAlbumData(st);
                 else if (temp.equals("GETUSERDATA")) getUserData(st);
                 else if (temp.equals("USERBUY")) userBuy(st);
-                string = in.readLine();
             }
         } catch (IOException ex) {
             Logger.getLogger(ServerThread.class.getName()).log(Level.SEVERE, null, ex);
