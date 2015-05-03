@@ -100,7 +100,6 @@ public class ServerThread extends Thread{
                 else if (temp.equals("GETALBUMDATA")) getAlbumData(st);
                 else if (temp.equals("GETUSERDATA")) getUserData(st);
                 else if (temp.equals("USERBUY")) userBuy(st);
-                else if (temp.equals("DOWNLOAD")) ;
             }
         } catch (IOException ex) {
             Logger.getLogger(ServerThread.class.getName()).log(Level.SEVERE, null, ex);
