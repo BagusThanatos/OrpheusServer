@@ -1,6 +1,7 @@
 package admgui;
 
 import javax.swing.JOptionPane;
+import orpheusserver.DownloadServer;
 import orpheusserver.Server;
 
 /*
@@ -20,10 +21,11 @@ public class GUI_1 extends javax.swing.JFrame {
      */
     
     Server server;
+    DownloadServer downSer;
     public GUI_1() {
         initComponents();
         server=new Server();
-        
+        downSer = new DownloadServer();
     }
 
     /**
@@ -127,6 +129,7 @@ public class GUI_1 extends javax.swing.JFrame {
 
     private void butRunServerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butRunServerActionPerformed
         if (!server.isAlive()) server.start();
+        if (!downSer.isAlive()) downSer.start();
         else JOptionPane.showMessageDialog(this, "Server sudah berjalan");
     }//GEN-LAST:event_butRunServerActionPerformed
 

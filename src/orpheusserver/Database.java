@@ -46,7 +46,7 @@ public class Database {
         }
     }
     
-    public synchronized ResultSet getData(String query){
+    public ResultSet getData(String query){
             try {
                 rs = stmt.executeQuery(query);
             } catch (Exception e){
@@ -54,7 +54,7 @@ public class Database {
             }
             return rs;
     }
-    public synchronized void query(String query){
+    public void query(String query){
         try {
             stmt.executeUpdate(query);
         } catch (SQLException ex) {

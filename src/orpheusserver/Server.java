@@ -17,12 +17,11 @@ import java.util.logging.Logger;
 public class Server extends Thread{
 
     @Override
-    public void run() {
-        //Database d = new Database(); System.out.println("success connecting to database database");
-        Database.getInstance();
+    public void run() {  
         ServerSocket s=null;
         try {
             s= new ServerSocket(10000);
+            System.out.println(s.getInetAddress());
             while (true){
                 ServerThread st = new ServerThread(s.accept());
                 st.start();

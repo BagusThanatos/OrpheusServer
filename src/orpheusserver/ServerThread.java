@@ -31,13 +31,12 @@ public class ServerThread extends Thread{
     
     private void login(StringTokenizer st){
         try {
-            String username=st.nextToken();
+            String username=st.nextToken(); System.out.println("here");
             String password = st.nextToken();
             ResultSet rs = Database.getInstance().getData("select * from user where email_user='"+username+
                     "' and pass_user='"+password+"'");
             PrintWriter p = new PrintWriter(s.getOutputStream(),true);
-            if (rs.isBeforeFirst()) {
-                
+            if (rs.isBeforeFirst()) { 
                 p.write(username);
             }
             else p.write("WRONG");
@@ -91,7 +90,8 @@ public class ServerThread extends Thread{
             String string;
             InputStream is = s.getInputStream();
             BufferedReader in = new BufferedReader(new InputStreamReader(is));
-            while((string=in.readLine())!=null){
+            string=in.readLine();
+            while(string!=null){
                 StringTokenizer st = new StringTokenizer(string, " ");
                 String temp=st.nextToken();
                 if (temp.equals("LOGIN")) login(st);
@@ -100,6 +100,7 @@ public class ServerThread extends Thread{
                 else if (temp.equals("GETALBUMDATA")) getAlbumData(st);
                 else if (temp.equals("GETUSERDATA")) getUserData(st);
                 else if (temp.equals("USERBUY")) userBuy(st);
+                string = in.readLine();
             }
         } catch (IOException ex) {
             Logger.getLogger(ServerThread.class.getName()).log(Level.SEVERE, null, ex);
