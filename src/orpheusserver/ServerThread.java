@@ -32,13 +32,14 @@ public class ServerThread extends Thread{
     private void login(StringTokenizer st){
         try {
             String username=st.nextToken();
-            String password = st.nextToken();System.out.println(username+password);
+            String password = st.nextToken();
             ResultSet rs = Database.getInstance().getData("select * from user where email_user='"+username+
                     "' and pass_user='"+password+"'");
-            System.out.println("here");
             PrintWriter p = new PrintWriter(s.getOutputStream(),true);
-            if (rs.isBeforeFirst()) { 
-                p.println(username);
+            if (rs.isBeforeFirst()) {
+                rs.next();
+                String s=username+" "+rs.getString("nama_user")+" "+rs.getString("money");
+                p.println(s);
             }
             else p.println("WRONG");
         } catch (SQLException | IOException ex) {
@@ -47,11 +48,12 @@ public class ServerThread extends Thread{
     }
     private void getAlbumList(StringTokenizer st){
         try {
-            ResultSet rs = Database.getInstance().getData("select * from album");
+            String delim=";";
+            ResultSet rs = Database.getInstance().getData("select * from album,memiliki,artist where album.id_album=memiliki.id_album and memiliki.id_artis=artist.id_artist");
             if(rs.isBeforeFirst()){
                 String s="";
                 while(rs.next()){
-                    s+=rs.getString("id_album")+" "+rs.getString("nama_album")+" "+rs.getString("tgl_rilis")+" "+rs.getString("harga")+" ";
+                    s+=rs.getString("id_album")+delim+rs.getString("nama_album")+delim+rs.getString("tgl_rilis")+delim+rs.getString("nama_artis")+delim+rs.getString("harga")+delim;
                 }
                 PrintWriter p = new PrintWriter(this.s.getOutputStream(),true);
                 p.println(s);
@@ -82,7 +84,21 @@ public class ServerThread extends Thread{
     }
     
     private void userBuy(StringTokenizer st){
-        Database.getInstance().query("insert into library_user ('"+st.nextToken()+"','"+st.nextToken()+"')");
+        try {
+            String id_album=st.nextToken();
+            String id_user=st.nextToken();
+            Database.getInstance().query("insert into library_user values (\""+id_album+"\",\""+id_user+"\")");
+            ResultSet rs = Database.getInstance().getData("select harga from album where id_album='"+id_album+"'");
+            rs.next();
+            int harga= Integer.parseInt(rs.getString("harga"));
+            rs = Database.getInstance().getData("select money from user where email_user='"+id_user+"'");
+            rs.next();
+            int money=Integer.parseInt(rs.getString("money"));
+            
+            Database.getInstance().query(("update user set money="+(money-harga)+" where email_user='"+id_user+"'"));
+        } catch (SQLException ex) {
+            Logger.getLogger(ServerThread.class.getName()).log(Level.SEVERE, null, ex);
+        }
     } 
 
     @Override
@@ -92,15 +108,18 @@ public class ServerThread extends Thread{
             InputStream is = s.getInputStream();
             BufferedReader in = new BufferedReader(new InputStreamReader(is));
             while((string=in.readLine())!=null){
-                StringTokenizer st = new StringTokenizer(string, " ");System.out.println(in.toString());
+                try {
+                StringTokenizer st = new StringTokenizer(string, " ");
                 String temp=st.nextToken();
-                System.out.println(temp);
                 if (temp.equals("LOGIN")) login(st);
                 else if (temp.equals("LOGOUT")) break;
                 else if (temp.equals("GETALBUMLIST")) getAlbumList(st);
                 else if (temp.equals("GETALBUMDATA")) getAlbumData(st);
                 else if (temp.equals("GETUSERDATA")) getUserData(st);
                 else if (temp.equals("USERBUY")) userBuy(st);
+                } catch(Exception e){
+                    System.out.println(e.getClass());
+                }
             }
         } catch (IOException ex) {
             Logger.getLogger(ServerThread.class.getName()).log(Level.SEVERE, null, ex);

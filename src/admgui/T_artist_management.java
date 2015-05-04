@@ -17,6 +17,10 @@ public class T_artist_management extends javax.swing.JFrame {
      */
     private static T_artist_management t = new T_artist_management();
     
+    public static T_artist_management getInstance(){
+         return t ;
+    }
+    
     private T_artist_management() {
         initComponents();
     }
@@ -76,9 +80,7 @@ public class T_artist_management extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    public static T_artist_management getInstance(){
-         return t ;
-    }
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;

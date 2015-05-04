@@ -28,7 +28,6 @@ public class Database {
     private final static Database d= new Database();
     
     public static Database getInstance(){
-        System.out.println("berhasil");
         return d;
     }
    

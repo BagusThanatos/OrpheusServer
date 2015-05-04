@@ -26,10 +26,10 @@ import java.util.logging.Logger;
  */
 public class DownloadServerThread extends Thread{
     Socket s;
-    
     public DownloadServerThread(Socket s){
         this.s=s;
     }
+
     @Override
     public void run(){
         PrintWriter p= null;
@@ -37,9 +37,11 @@ public class DownloadServerThread extends Thread{
         BufferedReader br=null;
         OutputStream os=null;
         try {
+
             os=s.getOutputStream();
             br= new BufferedReader(new InputStreamReader(s.getInputStream()));
             String string= br.readLine();
+            System.out.println("here");
             StringTokenizer st = new StringTokenizer(string," ");
             String user= st.nextToken(), album= st.nextToken();
             
@@ -47,13 +49,14 @@ public class DownloadServerThread extends Thread{
             
             
             byte[] fileByteArray = new byte[(int)file.length()];
-            os.write((int)file.length());
+            System.out.println(file.length());
+            //os.write((int)file.length());
             
             bos = new BufferedInputStream(new FileInputStream(file));
             bos.read(fileByteArray,0,fileByteArray.length);
             
             //don't forget to wait for client to send something as a confirmation.
-            s.getInputStream().read();
+            //s.getInputStream().read();
             
             os.write(fileByteArray, 0, fileByteArray.length);
             os.flush();
