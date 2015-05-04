@@ -45,7 +45,7 @@ public class DownloadServerThread extends Thread{
             StringTokenizer st = new StringTokenizer(string," ");
             String user= st.nextToken(), album= st.nextToken();
             
-            File file= new File("/album/"+album+".zip");
+            File file= new File("D:/album/"+album+".zip");
             
             
             byte[] fileByteArray = new byte[(int)file.length()];
